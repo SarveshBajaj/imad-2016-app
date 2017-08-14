@@ -5,21 +5,98 @@ var path = require('path');
 var app = express();
 app.use(morgan('combined'));
 
+var articles = {
+    'article-one' : {
+          title: "Article One | Sarvesh Bajaj",
+          heading: "Article-One",
+          date: "Aug 14,2017",
+          content:`
+              <p>
+                This is the content for my first article.This is the content for my first article.
+                This is the content for my first article.This is the content for my first article.
+                This is the content for my first article.This is the content for my first article.
+              </p>
+              <p>
+                This is the content for my first article.This is the content for my first article.
+                This is the content for my first article.This is the content for my first article.
+                This is the content for my first article.This is the content for my first article.
+              </p>
+              <p>
+                This is the content for my first article.This is the content for my first article.
+                This is the content for my first article.This is the content for my first article.
+                This is the content for my first article.This is the content for my first article.
+              </p> `
+            },
+    'article-two' : {
+        title: "Article Two | Sarvesh Bajaj",
+        heading: "Article-Two",
+        date: "Aug 15,2017",
+        content:`
+            <p>
+              This is the content for my Second 2nd article.
+            </p> `
+        },
+    'article-three' : {
+      title: "Article Three | Sarvesh Bajaj",
+      heading: "Article-Three",
+      date: "Aug 16,2017",
+      content:`
+          <p>
+            This is the content for my Third 3rd article.
+          </p> `
+      }
+  };
+function createTemplate(data){
+    var title = data.title;
+    var date = data.date;
+    var heading = data.heading;
+    var content = data.content;
+    var htmlTemplate =  `
+    <html>
+      <head>
+        <title>
+          ${title}
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link href="/ui/style.css" rel="stylesheet" />
+      </head>
+      <body>
+        <div class="container">
+          <div>
+              <a href="/">Home</a>
+          </div>
+          <hr/>
+          <h3>
+            ${heading}
+          </h3>
+          <div>
+              ${date}
+          </div>
+          <div>
+              ${content}
+          </div>
+      </div>
+      </body>
+    </html>
+    `;
+    return htmlTemplate;
+    }
+
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'index.html'));
 });
 
-app.get('/article-one', function (req, res) {
-  res.sendFile(path.join(__dirname, 'ui', 'article-one.html'));
+app.get('/:articleName', function (req, res) {
+  var articleName = req.params.articleName;
+  res.send(createTemplate(articles[articleName]));
 });
 
-app.get('/article-two', function (req, res) {
-  res.send('Artcle two requested and will be served here');
-});
+/*app.get('/article-two', function (req, res) {
+  res.send(createTemplate(article-two));
 
 app.get('/article-three', function (req, res) {
-  res.send('Artcle three requested and will be served here');
-});
+  res.send(createTemplate(article-three));
+});*/
 
 app.get('/ui/style.css', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'style.css'));
